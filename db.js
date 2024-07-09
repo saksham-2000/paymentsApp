@@ -1,4 +1,4 @@
-import mongoose, { model, Schema } from "mongoose";
+const mongoose = require('mongoose');
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/paytm")
@@ -7,15 +7,27 @@ mongoose
   })
   .catch((e) => console.log(`${e} oh no, not connected to db`));
 
-const UserSchema = new Schema({
-  userName: String,
-  firstName: String,
-  lastName: String,
-  password: String,
+const UserSchema = new mongoose.Schema({
+  username: {
+    type:String,
+    required: true,
+  }, 
+  firstName: {
+    type:String,
+    required: true,
+  }, 
+  lastName: {
+    type:String,
+    required: true,
+  }, 
+  password: {
+    type:String,
+    required: true,
+  }
 });
 
 const User = mongoose.model("User", UserSchema);
 
 module.exports = {
-  User,
+  User
 };
