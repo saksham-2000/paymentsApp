@@ -5,17 +5,38 @@ const { User } = require("../../db");
 const { JWT_SECRET_KEY } = require("../config");
 
 const jwt = require("jsonwebtoken");
-const { boolean } = require("zod");
 
 const router = express.Router();
+
+const { z } = require("zod");
+
+const signupBody = z.object({
+    username: z.string().email(),
+    password: z.string(),
+    firstName: z.string(),
+    lastName: z.string(),
+});
+
+const signinBody = z.object({
+    username: z.string().email(),
+    password: z.string(),
+});
 
 router.get("/", (req, res) => {
     res.send("hello api user");
 });
 
 router.post("/signup", async (req, res) => {
-    let isSignup=false;
+    let isSignup = false;
     const body = req.body;
+
+    const { success } = signupBody.safeParse(body);
+
+    if (!success) {
+        return res.status(411).send({
+            message: "galat inputs sign up",
+        });
+    }
 
     const username1 = body.username;
     const password1 = body.password;
@@ -34,50 +55,72 @@ router.post("/signup", async (req, res) => {
     if (isUserPresent.length == 0) {
         // user not present
 
-        const response = await User.create(
-        payload);
-        const token=jwt.sign(payload,JWT_SECRET_KEY);
-        console.log(response);
-        if (response) {
+        const dbUser = await User.create(payload);
+        const token = jwt.sign(
+            {
+                userId: dbUser._id,
+            },
+            JWT_SECRET_KEY
+        );
+        console.log(dbUser);
+        if (dbUser) {
             res.send({
                 message: "User created successfully",
                 token: token,
             });
-            isSignup=true;
+            isSignup = true;
         }
     }
-    if(!isSignup){
-    res.status(411).send({
-        message: "Email already taken / Incorrect inputs",
-    });
-}
+    if (!isSignup) {
+        res.status(411).send({
+            message: "Email already taken / Incorrect inputs",
+        });
+    }
 });
 
 router.post("/signin", async (req, res) => {
-
-    let isSignIn=false;
+    let isSignIn = false;
     const body = req.body;
+    try {
+        const { success } = signinBody.safeParse(body);
 
-    const username1 = req.headers.username;
-    
-    const jwtToken=req.headers.authorization.split(' ')[1];
-     
-    const decoded=jwt.verify(jwtToken, JWT_SECRET_KEY);
-    
-    if(decoded.username==username1){
-         isSignIn=true;
-    }
-    if(isSignIn){
-        res.status(200).send({
-            message: "signed in",
+        if (!success) {
+            const error = new Error("body-parsing-error");
+            error.message = "Body Inputs in the wrong format";
+            error.code=411;
+            throw error;
+        }
+
+        const dbUser = await User.findOne({
+            username: req.body.username,
+            password: req.body.password,
         });
-    }else {
-        res.status(411).send({
-            message: "Error while logging in"
-        })
-    }
 
-   
+        if (dbUser) {
+            const token = jwt.sign(
+                {
+                    userId: dbUser._id,
+                    
+                },
+                JWT_SECRET_KEY
+            );
+            res.status(200).send({
+                message: "signed in",
+                token: token,
+            });
+            return;
+        } else {
+            const error = new Error("Sign-in-error");
+            error.message = "This user is not present in our records";
+            error.code=411;
+            throw error;
+        }
+    } catch (err) {
+        res.status(err.code).send({
+            message: "Error while logging in",
+            error: err.message,
+        });
+    }
 });
 
 module.exports = router;
