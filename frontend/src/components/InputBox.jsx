@@ -4,7 +4,7 @@ export function InputBox(props){
          {props.textField}
         </div>
         <div className="border px-1 py-1 mx-2">
-        <input type="text" placeholder={props.placeholder} />
+        <input type="text" placeholder={props.placeholder} onChange={props.onChange} />
         </div>
         
     </div>
