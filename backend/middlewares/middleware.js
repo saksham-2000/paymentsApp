@@ -6,7 +6,9 @@ const authMiddleware = function (req, res, next) {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(403).json({});
+    return res.status(403).json({
+        message:"This user is not authenticated"
+    });
   }
   const token = authHeader.split(" ")[1];
 
@@ -17,10 +19,12 @@ const authMiddleware = function (req, res, next) {
       next();
     }
   } catch (err) {
-    return res.status(403).send({});
+    return res.status(403).send({
+        message:"This user is not authenticated"
+    });
   }
 };
 
-module.exports({
-  authMiddleware,
-});
+module.exports = {
+  authMiddleware
+};
