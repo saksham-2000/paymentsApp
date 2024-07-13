@@ -11,9 +11,31 @@ export function Dashboard(props){
     const [balance, setBalance]=useState(5000);
     const [filter,setFilter]=useState("");
     const [name,setName]=useState("User");
+    const [id,setId]=useState("");
     const token=localStorage.getItem('token');
 
     const [users,setUsers]=useState([]);
+
+    useEffect(function(){
+        
+        axios.get("http://localhost:3000/api/v1/account/",{
+            headers: {
+                'Authorization': 'Bearer '+token
+              }
+        })
+        .then(function(response){
+           // console.log(response.data);
+              setName(response.data.firstName)
+              setId(response.data.userId);
+           
+            })
+        .catch(function(e){
+
+        });
+
+      
+    },[]);
+
 
     useEffect(function(){
         
@@ -24,14 +46,22 @@ export function Dashboard(props){
         })
         .then(function(response){
             let arr=response.data.user;
-            let arr2=[]
-            arr2=arr.map(function(u){
-                return {
-                    firstName: u.firstName,
-                    id: u._id
-                }
+            // remove the signed-in user from the list
+            let arr1=arr.filter(function(u){
+                
+                return u._id!=id;
             })
-            // console.log("saksham res: ", arr2);
+            let arr2=[]
+            
+            arr2=arr1.map(function(u){
+                console.log(id, u._id);
+                    return {
+                        firstName: u.firstName,
+                        id: u._id
+                    }
+                
+            })
+            
             setUsers(arr2);
         })
         .catch(function(e){
@@ -39,7 +69,7 @@ export function Dashboard(props){
         });
 
       
-    },[filter]);
+    },[filter,id]);
 
     useEffect(function(){
         
@@ -58,23 +88,7 @@ export function Dashboard(props){
       
     },[]);
 
-    useEffect(function(){
-        
-        axios.get("http://localhost:3000/api/v1/account/",{
-            headers: {
-                'Authorization': 'Bearer '+token
-              }
-        })
-        .then(function(response){
-              setName(response.data.firstName)
-            })
-        .catch(function(e){
-
-        });
-
-      
-    },[]);
-
+    
     return <>
     <div className="flex justify-between shadow-md my-4 px-2 py-2">
 <div className="text-2xl font-semibold ">
