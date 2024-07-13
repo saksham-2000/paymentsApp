@@ -1,2 +1,2 @@
 
-## Build a basic version of PayTM using MERN stack
+## Basic version of PayTM using MERN stack
