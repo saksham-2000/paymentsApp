@@ -54,7 +54,7 @@ export function Dashboard(props){
             let arr2=[]
             
             arr2=arr1.map(function(u){
-               
+                console.log(id, u._id);
                     return {
                         firstName: u.firstName,
                         id: u._id
