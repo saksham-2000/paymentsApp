@@ -51,7 +51,7 @@ router.post("/transfer", authMiddleware, async (req, res) => {
     userId: req.userId,
   })
 
-  if (!fromAccount || fromAccount.balance < amount) {
+  if (!fromAccount || fromAccount.balance < amount || amount<=0) {
    
     return res.status(400).send({
       message: "Invalid sender account/Insufficient Balance",
@@ -101,7 +101,7 @@ return res.send({
 });
 
 
-
+// ACID transaction (not working rn) (need replica set?)
 router.post("/transfer2", authMiddleware, async (req, res) => {
   const session = await mongoose.startSession();
 
