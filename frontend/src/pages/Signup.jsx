@@ -17,28 +17,28 @@ export function Signup() {
       <div className="my-10 border rounded-lg bg-white p-2">
         <Heading label="Sign up"></Heading>
         <SubHeading label="Enter your information to create an account"></SubHeading>
-        <InputBox
+        <InputBox type={"text"} 
           textField="First Name"
           placeholder="Saksham"
           onChange={(e) => {
             setFirstname(e.target.value);
           }}
         ></InputBox>
-        <InputBox
+        <InputBox type={"text"} 
           textField="Last Name"
           placeholder="Garg"
           onChange={(e) => {
             setLastname(e.target.value);
           }}
         ></InputBox>
-        <InputBox
+        <InputBox type={"text"} 
           textField="Email"
           placeholder="abc123@gmail.com"
           onChange={(e) => {
             setUsername(e.target.value);
           }}
         ></InputBox>
-        <InputBox
+        <InputBox type={"text"} 
           textField="Password"
           placeholder="Password"
           onChange={(e) => {

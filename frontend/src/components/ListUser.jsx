@@ -11,7 +11,7 @@ export function ListUser(props){
            {props.firstName}
             </div>
     </div>
-    <Link className="bg-black text-white px-4 rounded-md flex items-center" to={props.to}> Send Money</Link>
+    <Link className="bg-black text-white px-4 rounded-md flex items-center hover:bg-slate-800" to={props.to}> Send Money</Link>
 </div>
     )
 }

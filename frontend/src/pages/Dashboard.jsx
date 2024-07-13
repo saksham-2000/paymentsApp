@@ -10,29 +10,16 @@ export function Dashboard(props){
 
     const [balance, setBalance]=useState(5000);
     const [filter,setFilter]=useState("");
+    const [name,setName]=useState("User");
     const token=localStorage.getItem('token');
 
-    const [users,setUsers]=useState([
-        {
-            "id": "6690d554dfa620b4b65ab07b",        
-            "firstName": "Saksham"
-          },
-          {
-            "id": "6690d554dfa620b4b65ab07b",        
-            "firstName": "Sagnik"
-          },
-          {
-            "id": "6690d554dfa620b4b65ab07b",        
-            "firstName": "Aryan"
-          }
-
-    ]);
+    const [users,setUsers]=useState([]);
 
     useEffect(function(){
         
         axios.get("http://localhost:3000/api/v1/user/bulk?filter="+ filter,{
             headers: {
-                'Authorization': 'Bearer '+token
+                'Authorization': 'Bearer ' + token
               }
         })
         .then(function(response){
@@ -44,7 +31,7 @@ export function Dashboard(props){
                     id: u._id
                 }
             })
-            console.log("saksham res: ", arr2);
+            // console.log("saksham res: ", arr2);
             setUsers(arr2);
         })
         .catch(function(e){
@@ -54,6 +41,39 @@ export function Dashboard(props){
       
     },[filter]);
 
+    useEffect(function(){
+        
+        axios.get("http://localhost:3000/api/v1/account/balance",{
+            headers: {
+                'Authorization': 'Bearer '+token
+              }
+        })
+        .then(function(response){
+              setBalance(response.data.balance.toFixed(2))
+            })
+        .catch(function(e){
+
+        });
+
+      
+    },[]);
+
+    useEffect(function(){
+        
+        axios.get("http://localhost:3000/api/v1/account/",{
+            headers: {
+                'Authorization': 'Bearer '+token
+              }
+        })
+        .then(function(response){
+              setName(response.data.firstName)
+            })
+        .catch(function(e){
+
+        });
+
+      
+    },[]);
 
     return <>
     <div className="flex justify-between shadow-md my-4 px-2 py-2">
@@ -62,7 +82,7 @@ export function Dashboard(props){
 </div>
 <div className="flex">
     <div className="mr-2 flex items-center">
-Hello, User
+Hello, {name}
     </div>
     <div className="rounded-full w-8 h-8 flex justify-center items-center bg-gray-300">
         U
@@ -73,7 +93,7 @@ Hello, User
       <span className="font-bold">Your Balance</span> <span className="font-semibold">${balance}</span> 
     </div>
     
-    <InputBox textField={"Users"} placeholder={"Search users..."} onChange={function(e){
+    <InputBox type={"text"} textField={"Users"} placeholder={"Search users..."} onChange={function(e){
         setFilter(e.target.value);
         
     }}></InputBox>
@@ -81,7 +101,7 @@ Hello, User
 
         users.map(function(user){
     
-            return <ListUser key={Math.random()} firstName={user.firstName} to={"/sendmoney?friend="+ user.firstName}></ListUser>
+            return <ListUser key={Math.random()} firstName={user.firstName} to={"/sendmoney?friend="+ user.firstName+ "&id="+ user.id}></ListUser>
            
         })
        

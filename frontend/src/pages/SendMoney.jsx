@@ -2,11 +2,16 @@ import { InputBox } from "../components/InputBox";
 import { Heading } from "../components/Heading";
 import { Button } from "../components/Button";
 import { useSearchParams } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios"
 
 export function SendMoney() {
   const [searchParams] = useSearchParams();
 
   const friendName=searchParams.get('friend');
+  const toId=searchParams.get('id');
+
+  const [amount,setAmount]=useState(0);
 
   return (
     <div className="flex justify-center items-center">
@@ -21,11 +26,31 @@ export function SendMoney() {
           </div>
         </div>
         <div className="my-4">
-          <InputBox
+          <InputBox type={"number"}
             textField="Amount (in Rs)"
             placeholder="Enter Amount"
+            onChange={function(e){
+              setAmount(e.target.value);
+            }}
           ></InputBox>
-          <Button label="Initiate transfer" isGreen={true}></Button>
+          <Button label="Initiate transfer" isGreen={true} onClick={async function(){
+            try{
+            const response = await axios.post("http://localhost:3000/api/v1/account/transfer",{
+              amount: amount,
+              to: toId
+          },{
+             headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token")
+              }
+          });
+          console.log(response.data);
+          if(response.status==200){        
+            alert(response.data.message);
+          }
+        }catch(e){
+          alert(e);
+        }
+          }}></Button>
         </div>
       </div>
     </div>
