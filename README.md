@@ -1,7 +1,7 @@
 
 ## A basic version of PayTM app using MERN stack
 
-#Todo
+# To-do
 
 - add signout component
 - display all user's balance in front of their names on /dashboard
