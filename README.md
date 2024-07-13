@@ -1,2 +1,2 @@
 
-## Basic version of PayTM using MERN stack
+## A basic version of PayTM app using MERN stack
