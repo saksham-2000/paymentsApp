@@ -4,6 +4,7 @@ import { Button } from "../components/Button";
 import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios"
+import { useNavigate } from "react-router-dom";
 
 export function SendMoney() {
   const [searchParams] = useSearchParams();
@@ -12,6 +13,8 @@ export function SendMoney() {
   const toId=searchParams.get('id');
 
   const [amount,setAmount]=useState(0);
+
+  const navigate = useNavigate();
 
   return (
     <div className="flex justify-center items-center">
@@ -46,6 +49,7 @@ export function SendMoney() {
           console.log(response.data);
           if(response.status==200){        
             alert(response.data.message);
+            navigate("/dashboard");
           }
         }catch(e){
           alert(e);

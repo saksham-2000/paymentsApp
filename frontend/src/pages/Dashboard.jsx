@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { useState } from "react"
-
 import { InputBox } from "../components/InputBox";
 import { ListUser } from "../components/ListUser";
-
 import axios from "axios";
 
 export function Dashboard(props){
+
+ 
 
     const [balance, setBalance]=useState(5000);
     const [filter,setFilter]=useState("");
@@ -85,7 +85,7 @@ export function Dashboard(props){
 Hello, {name}
     </div>
     <div className="rounded-full w-8 h-8 flex justify-center items-center bg-gray-300">
-        U
+        {name[0].toUpperCase()}
     </div>
 </div>
     </div>

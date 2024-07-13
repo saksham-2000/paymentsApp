@@ -5,8 +5,10 @@ import { Button } from "../components/Button";
 import { BottomWarning } from "../components/BottomWarning";
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export function Signup() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [firstname, setFirstname] = useState("");
@@ -61,6 +63,7 @@ export function Signup() {
                   if(response.status==200){
                       localStorage.setItem("token",response.data.token);
                      alert(response.data.message);
+                     navigate("/dashboard");
                   }
             }catch(e){
                 
